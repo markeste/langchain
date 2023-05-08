@@ -27,6 +27,8 @@ class S3DirectoryLoader(BaseLoader):
         bucket = s3.Bucket(self.bucket)
         docs = []
         for obj in bucket.objects.filter(Prefix=self.prefix):
+            if obj.key[-1] == '/':
+                continue
             loader = S3FileLoader(self.bucket, obj.key)
             docs.extend(loader.load())
         return docs
